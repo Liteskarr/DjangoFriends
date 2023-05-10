@@ -71,11 +71,11 @@ class FriendRequestCreateTestCase(TestCase):
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
         self.assertEquals(
             models.FriendRequest.get_relation_status(self.user_x, self.user_y),
-            models.UsersRelation.Incoming
+            models.UsersRelation.RequestTo
         )
         self.assertEquals(
             models.FriendRequest.get_relation_status(self.user_y, self.user_x),
-            models.UsersRelation.Outcoming
+            models.UsersRelation.RequestFrom
         )
         req = models.FriendRequest.get_request(self.user_x, self.user_y)
         self.assertIsNotNone(req)
@@ -196,8 +196,8 @@ class FriendStatusTestCase(TestCase):
         target = self.users[0]
         answers = [
             models.UsersRelation.Friends,
-            models.UsersRelation.Incoming,
-            models.UsersRelation.Outcoming,
+            models.UsersRelation.RequestTo,
+            models.UsersRelation.RequestFrom,
             models.UsersRelation.Nothing
         ]
         for i, user in enumerate(self.users[1::]):
