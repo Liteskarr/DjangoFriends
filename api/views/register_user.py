@@ -5,7 +5,10 @@ import api.models as models
 import api.serializers as serializers
 
 
-@extend_schema(tags=['Users'])
+@extend_schema(
+    tags=['Users'],
+    summary='Register user by name.'
+)
 class RegisterUser(generics.CreateAPIView):
     queryset = models.User.objects.all()
     serializer_class = serializers.User

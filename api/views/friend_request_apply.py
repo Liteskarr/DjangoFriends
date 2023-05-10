@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework import views
 
@@ -8,11 +8,24 @@ import api.serializers as serializers
 
 @extend_schema(
     tags=['FriendRequests'],
-    request=serializers.FriendRequestAction,
+    parameters=[
+        OpenApiParameter(
+            name='initiator_id',
+            type=int,
+            location=OpenApiParameter.PATH,
+            description='ID of user who applies friend request.'
+        ), OpenApiParameter(
+            'subject_id',
+            type=int,
+            location=OpenApiParameter.PATH,
+            description='ID of user who sent friend request.'
+        )
+    ],
     responses={
-        status.HTTP_200_OK: serializers.User,
+        status.HTTP_200_OK: None,
         status.HTTP_404_NOT_FOUND: serializers.DefaultError,
     },
+    summary='Applies outboxed friend request.'
 )
 class FriendRequestApply(views.APIView):
     def put(self, request: views.Request, *args, initiator_id: int, subject_id: int, **kwargs):
@@ -24,9 +37,5 @@ class FriendRequestApply(views.APIView):
         if req is None:
             return views.Response(data={'details': 'Request for applying does not exists!'},
                                   status=status.HTTP_404_NOT_FOUND)
-        inv = models.FriendRequest.make_request(initiator, subject)
-        inv.status = models.Statuses.Friends
-        req.status = models.Statuses.Friends
-        req.save()
-        inv.save()
+        models.FriendRequest.make_friends(initiator, subject)
         return views.Response(status=status.HTTP_200_OK)

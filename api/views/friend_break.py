@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework import views
 
@@ -13,6 +13,22 @@ import api.serializers as serializers
         status.HTTP_200_OK: None,
         status.HTTP_404_NOT_FOUND: serializers.DefaultError,
     },
+    parameters=[
+        OpenApiParameter(
+            name='initiator_id',
+            type=int,
+            location=OpenApiParameter.PATH,
+            description='Initiator of breaking.',
+        ),
+        OpenApiParameter(
+            name='subject_id',
+            type=int,
+            location=OpenApiParameter.PATH,
+            description='Subject of breaking.'
+        )
+    ],
+    summary='Breaks friend relations between two users. '
+            'Saves friend request from subject to initiator with checked status.'
 )
 class FriendBreak(views.APIView):
     def delete(self, request: views.Request, *args, initiator_id: int, subject_id: int, **kwargs):

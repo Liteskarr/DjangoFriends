@@ -5,7 +5,10 @@ import api.models as models
 import api.serializers as serializers
 
 
-@extend_schema(tags=['Users'])
+@extend_schema(
+    tags=['Users'],
+    summary='Returns user information by ID.'
+)
 class GetUser(generics.RetrieveAPIView):
     queryset = models.User.objects.all()
     serializer_class = serializers.User

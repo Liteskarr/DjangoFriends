@@ -10,9 +10,10 @@ import api.serializers as serializers
     tags=['FriendRequests'],
     request=serializers.FriendRequestAction,
     responses={
-        status.HTTP_200_OK: serializers.User,
+        status.HTTP_201_CREATED: None,
         status.HTTP_409_CONFLICT: serializers.DefaultError,
     },
+    summary='Creates friend request from one user to other.'
 )
 class FriendRequestCreate(views.APIView):
     def post(self, request: views.Request, *args, **kwargs):

@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework import views
 
@@ -8,10 +8,25 @@ import api.serializers as serializers
 
 @extend_schema(
     tags=['FriendRequests'],
+    parameters=[
+        OpenApiParameter(
+            name='initiator_id',
+            type=int,
+            location=OpenApiParameter.PATH,
+            description='ID of user who created friend request for deletion.'
+        ),
+        OpenApiParameter(
+            name='subject_id',
+            type=int,
+            location=OpenApiParameter.PATH,
+            description='ID of user who received friend request for deletion.'
+        )
+    ],
     responses={
-        status.HTTP_200_OK: serializers.User,
+        status.HTTP_200_OK: None,
         status.HTTP_404_NOT_FOUND: serializers.DefaultError,
     },
+    summary='Deletes sent friend request.'
 )
 class FriendRequestDelete(views.APIView):
     def delete(self, request: views.Request, *args, initiator_id: int, subject_id: int, **kwargs):
