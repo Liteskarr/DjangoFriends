@@ -1,0 +1,390 @@
+openapi: 3.0.3
+info:
+  title: DJangoFriends API
+  version: 0.0.1
+paths:
+  /api/v1/friends/break/{initiator_id}/{subject_id}:
+    delete:
+      operationId: api_v1_friends_break_destroy
+      summary: Breaks friend relations between two users. Saves friend request from
+        subject to initiator with checked status.
+      parameters:
+      - in: path
+        name: initiator_id
+        schema:
+          type: integer
+        description: Initiator of breaking.
+        required: true
+      - in: path
+        name: subject_id
+        schema:
+          type: integer
+        description: Subject of breaking.
+        required: true
+      tags:
+      - FriendRequests
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+          description: ''
+  /api/v1/friends/info/{id}/:
+    get:
+      operationId: api_v1_friends_info_retrieve
+      summary: Returns info about all user's relations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Checked user's ID
+        required: true
+      tags:
+      - FriendRequests
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendsInfo'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+          description: ''
+  /api/v1/friends/request/apply/{initiator_id}/{subject_id}:
+    put:
+      operationId: api_v1_friends_request_apply_update
+      summary: Applies outboxed friend request.
+      parameters:
+      - in: path
+        name: initiator_id
+        schema:
+          type: integer
+        description: ID of user who applies friend request.
+        required: true
+      - in: path
+        name: subject_id
+        schema:
+          type: integer
+        description: ID of user who sent friend request.
+        required: true
+      tags:
+      - FriendRequests
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+          description: ''
+  /api/v1/friends/request/create/:
+    post:
+      operationId: api_v1_friends_request_create_create
+      summary: Creates friend request from one user to other.
+      tags:
+      - FriendRequests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendRequestActionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FriendRequestActionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FriendRequestActionRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          description: No response body
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+          description: ''
+  /api/v1/friends/request/delete/{initiator_id}/{subject_id}:
+    delete:
+      operationId: api_v1_friends_request_delete_destroy
+      summary: Deletes sent friend request.
+      parameters:
+      - in: path
+        name: initiator_id
+        schema:
+          type: integer
+        description: ID of user who created friend request for deletion.
+        required: true
+      - in: path
+        name: subject_id
+        schema:
+          type: integer
+        description: ID of user who received friend request for deletion.
+        required: true
+      tags:
+      - FriendRequests
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+          description: ''
+  /api/v1/friends/request/deny/{initiator_id}/{subject_id}:
+    put:
+      operationId: api_v1_friends_request_deny_update
+      summary: Denies outboxed friend request.
+      parameters:
+      - in: path
+        name: initiator_id
+        schema:
+          type: integer
+        description: ID of user who denies friend request.
+        required: true
+      - in: path
+        name: subject_id
+        schema:
+          type: integer
+        description: ID of user who sent friend request.
+        required: true
+      tags:
+      - FriendRequests
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+          description: ''
+  /api/v1/friends/status/{initiator_id}/{subject_id}:
+    get:
+      operationId: api_v1_friends_status_retrieve
+      summary: Returns status of relation between two users.
+      parameters:
+      - in: path
+        name: initiator_id
+        schema:
+          type: integer
+        description: Initiator of status checking.
+        required: true
+      - in: path
+        name: subject_id
+        schema:
+          type: integer
+        description: Subject of status checking.
+        required: true
+      tags:
+      - FriendRequests
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusBetweenUsers'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+          description: ''
+  /api/v1/users/all/:
+    get:
+      operationId: api_v1_users_all_list
+      summary: Returns list of all users at server.
+      tags:
+      - Users
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/users/get/{id}/:
+    get:
+      operationId: api_v1_users_get_retrieve
+      summary: Returns user information by ID.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Users
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/users/register/:
+    post:
+      operationId: api_v1_users_register_create
+      summary: Register user by name.
+      tags:
+      - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+components:
+  schemas:
+    DefaultError:
+      type: object
+      description: Serializer of default error.
+      properties:
+        details:
+          type: string
+      required:
+      - details
+    FriendRequestActionRequest:
+      type: object
+      description: Serializer of friend reqeust action.
+      properties:
+        initiator_id:
+          type: integer
+          description: Initiator of action.
+        subject_id:
+          type: integer
+          description: Subject of action.
+      required:
+      - initiator_id
+      - subject_id
+    FriendsInfo:
+      type: object
+      description: Serializer of friends info.
+      properties:
+        friends:
+          type: array
+          items:
+            type: integer
+        checked_inbox:
+          type: array
+          items:
+            type: integer
+        unchecked_inbox:
+          type: array
+          items:
+            type: integer
+        outbox:
+          type: array
+          items:
+            type: integer
+      required:
+      - checked_inbox
+      - friends
+      - outbox
+      - unchecked_inbox
+    StatusBetweenUsers:
+      type: object
+      description: Serializer of status between two users.
+      properties:
+        status:
+          type: string
+      required:
+      - status
+    User:
+      type: object
+      description: Serializer of user.
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+        username:
+          type: string
+          maxLength: 16
+      required:
+      - pk
+      - username
+    UserRequest:
+      type: object
+      description: Serializer of user.
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 16
+      required:
+      - username
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
