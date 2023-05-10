@@ -42,4 +42,4 @@ docker-compose --file ./docker-compose-tests.yml up --build --abort-on-container
 Swagger-документация доступна по адресу `api/v1/docs`
 
 Подробная спецификация находится в файле: 
-`artifacts/openapi-schema.yml`
+`artifacts/openapi-schema.yaml`
