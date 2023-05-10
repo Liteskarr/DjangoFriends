@@ -4,6 +4,9 @@ import api.models as models
 
 
 class User(serializers.ModelSerializer):
+    """
+    Serializer of user.
+    """
     MIN_USERNAME_LENGTH = 6
     MAX_USERNAME_LENGTH = 16
 
